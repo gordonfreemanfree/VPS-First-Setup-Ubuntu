@@ -80,7 +80,7 @@ ssh-keygen -t rsa
 You will be asked to name the file. The convention is: *id_rsa_xxx*. Where 'xxx' is something you can choose.
 Next step is to choose a password to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
 
-You have successfully generated to files on your local machine.
+You have successfully generated two files on your local machine.
 1. the file 'id_rsa_xxx' which is your private key and stays on your local machine.
 2. the file 'id_rsa_xxx.pub' this is your public key which we need to upload to your VPS.
 
