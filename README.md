@@ -175,13 +175,15 @@ sed -i 's/^PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
 ```
 
-## 6. Changing the ssh port and setting up a firewall
+## 6. Setting up a firewall and changing ssh port
 Your standard ssh port is port 22. So every bot out there is knocking on the port 22. If we change this default port we can protect ourselfs from those bots. Of course they can use a port scanner. But you know, security is nothing binary. Just make it harder for someone to crack the system.
 
 
-First we want to check that our web host provides a console login. This is important because if we lock ouself out we lose the access to our VPS. **Warning**. Take this serious. You don't want to lock yourself out. If you mess up this configuration you no longer can access via ssh.
+First we want to check that our web host provides a console login without ssh. This is important because if we lock ouself out we lose the access to our VPS. **Warning**. Take this serious. You don't want to lock yourself out. If you mess up this configuration you no longer can access via ssh. No guarantee for this!
 
-We install a firewall called ufw. On your VPS as a sudoer:
+
+### Firewall
+We install a firewall called ufw on your VPS as a sudoer:
 ```
 sudo apt-get install ufw
 
@@ -195,11 +197,83 @@ It is probably inactive. Now open the configuration file and make sure that IPv6
 sudo nano /etc/default/ufw
 ```
 Check the textfile if 'IPV6' is set to 'yes' (IPV6=yes). Exit and save with ctrl + x.
+
+The standard setting is that you allow all outgoing connections and deny all incoming connections.
+**Warning** This is the crucial part. If we are not careful we lock ourselfs out. **Make sure you have a login to your VPS from the host provider independent of ssh.**
+```
+sudo ufw default deny incoming
+sudo ufw default allow outgoing
+```
+We now want to allow the ssh connection from outside. 
+```
+sudo ufw allow ssh
+sudo ufw allow 22/tcp
+```
+Restart the firewall:
 ```
 sudo ufw disable
 sudo ufw enable
+sudo ufw status
+```
+Hopefully you will see something like '22/tcp - allow - anywhere' for IPv4 and IPv6. Good!
 
-The standard
+### Changing ssh port
+You have about 65000 ports on our VPS. You should use a free port which is **not** in the range of 1-1024. I will use port 5522 for my ssh.
+
+Before we change the ssh port we want to update the rules on our firewall.
+```
+sudo ufw allow 5522/tcp
+```
+Check if the rules are added
+```
+sudo ufw status
+```
+Next thing is to change the ssh port.
+```
+sudo nano /etc/ssh/sshd_config
+```
+Navigate to the field port and change it to port 5522. **Please concentrate and double check** Exit and save with ctrl + x.
+```
+sudo systemctl restart ssh
+```
+You should see the ssh listening to port 5522.
+```
+ss -an | grep 5522
+```
+check also this:
+```
+lsof -Pni|grep sshd
+```
+Alright. We have updated our ufw to allow port 5522 and we have changed the ssh port. Once you leave this established session and there is a failure you will lose the access to your VPS via ssh. Don't close this terminal. Open a new one and try to connect to your VPS. Adjust the command - you know now how to do it.
+
+```
+ssh -i ~/.ssh/id_rsa_xxx yournewuser@IP-address -p 5522
+```
+This is the proof that we still have access. Nice!
+
+### Updating the ssh config file on your local machine
+Open the ssh config file on your local machine.
+```
+cd ~/.ssh/
+nano config
+```
+Add Port 5522 to your Host - simply 'Port 5522'. Exit and save.
+Connect to your VPS:
+```
+ssh vps_coda
+```
+Done!? Almost.
+
+## Update firewall to be ready for coda
+As you will see while installing the coda node you will need to open port 8302 and 8303 on your VPS to be able to run the node. It's simple:
+```
+sudo ufw allow 8302/tcp
+sudo ufw allow 8303/tcp
+```
+What next? Your VPS is ready to run some snarky software.
+Go to:
+https://codaprotocol.com/docs/getting-started
+
 
 
 
