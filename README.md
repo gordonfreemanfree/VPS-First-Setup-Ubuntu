@@ -250,8 +250,7 @@ Alright. We have updated our ufw to allow port 5522 and we have changed the ssh 
 ssh -i ~/.ssh/id_rsa_xxx yournewuser@IP-address -p 5522
 ```
 This is the proof that we still have access. Nice!
-
-When we should close the previous ssh port 22 with the following command
+Then we should close the previous ssh port 22 with the following command.
 ```
 sudo ufw deny 22/tcp
 ```
