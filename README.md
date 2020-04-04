@@ -101,11 +101,10 @@ Enter your password which you used for encrypting your RSA key. (Not your user p
 ## 3b. Generating a RSA key pair -- using PuTTY on Windows 
 lets open puttygen.exe on your local machine to generate you RSA key pair.
 the paramters should be set as following
+ 
  Type of key to generate= RSA
  number of bits in a generated key= 2048
  
-
-
 Click on generate. While generation you have to move your mouse over the application window for some random computations.
 Once it´s done you can set a Key comment only for a better overview if you have several on your computer.
 Next step is to choose a password (Key passphrase) to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
@@ -122,8 +121,9 @@ sudo nano authorized_keys
 Paste in your public key string and save that file.
 
 
+
 Login via PuTTY with your private-key
-....
+
 
 
 
