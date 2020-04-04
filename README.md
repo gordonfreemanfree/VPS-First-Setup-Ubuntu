@@ -112,7 +112,7 @@ Next step is to choose a password (Key passphrase) to encrypt the private key. C
 Now you can save your private key on your local machine. Later you choose that file for authentication in PuTTY.exe
 The public key string you have to copy to your VPS.
 
-On your VPS you go to directory \home\<yournewuser>\.ssh
+On your VPS you go to directory \home\\<yournewuser>\\.ssh
 If this directory doesn´t exists, just create it.
 
 ```
