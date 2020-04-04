@@ -69,7 +69,7 @@ ssh yournewuser@IP-address
 ```
 You see why we need a strong password? At the moment everybody with the password of the yournewuser can login to your VPS. Let's work an that.
 
-## 3. Generating a RSA key pair 
+## 3a. Generating a RSA key pair -- MAC OS
 Our goal in this chapter is to activate the ssh login with a private key. After that we will turn off the password login.
 Let's open a new terminal on your **local** machine. 
 Navigate to your .ssh folder and run generate the RSA keys. 
@@ -97,6 +97,34 @@ Now you should see something like 'number of keys added: 1' in your terminal. Pe
 ssh -i ~/.ssh/id_rsa_coda yournewuser@IP-address
 ```
 Enter your password which you used for encrypting your RSA key. (Not your user password.) Voila! 
+
+## 3b. Generating a RSA key pair -- using PuTTY on Windows 
+lets open puttygen.exe on your local machine to generate you RSA key pair.
+the paramters should be set as following
+ Type of key to generate= RSA
+ number of bits in a generated key= 2048
+
+Click on generate. While generation you have to move your mouse over the application window for some random computations.
+Once it´s done you can set a Key comment only for a better overview if you have several on your computer.
+Next step is to choose a password (Key passphrase) to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
+
+Now you can save your private key on your local machine. Later you choose that file for authentication in PuTTY.exe
+The public key string you have to copy to your VPS.
+
+On your VPS you go to directory \home\<yournewuser>\.ssh
+If this directory doesn´t exists, just create it.
+
+```
+sudo nano authorized_keys
+```
+Paste in your public key string and save that file.
+
+
+Login via PuTTY with your private-key
+....
+
+
+
 
 ### Organizing RSA keys
 For every VPS you are using you will have a different RSA keys (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
