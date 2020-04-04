@@ -103,6 +103,8 @@ lets open puttygen.exe on your local machine to generate you RSA key pair.
 the paramters should be set as following
  Type of key to generate= RSA
  number of bits in a generated key= 2048
+ 
+
 
 Click on generate. While generation you have to move your mouse over the application window for some random computations.
 Once it´s done you can set a Key comment only for a better overview if you have several on your computer.
