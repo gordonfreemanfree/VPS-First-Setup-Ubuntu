@@ -3,12 +3,13 @@ This Tutorial shows you how to secure your VPS. It is crucial to follow the best
 
 At the moment this tutorial is only for Mac OS users.
 
-## 1. Connecting to the VPS and updating
+## 1. Connecting to the VPS 
 When you recieve your loggin data from the web host you usually get three important information:
 * your IP address
 * your username (which is in general 'root')
 * your password for 'root'
 
+### 1a. Connecting from MAC OS
 Open your terminal and use the following command to connect to your VPS. You should of course insert the information you recieved from the web host.
 ```
 ssh username@IP-address
@@ -24,7 +25,20 @@ ssh root@178.182.442.192
 You will be asked to enter your password. After entering it and pressing ENTER you are logged in. 
 That's it. You have now *full* control of your first VPS. But as useful this may occur at the beginning there is also a downside. Everybody with the password can connect via ssh to your VPS and you change everything he wants. Let's change this.
 
-### Updating Ubuntu
+### 1b. Connecting from Windows
+For this tutorial we use the free SSH and telnet client - software PuTTY. You can download it on https://www.putty.org/.
+Open puTTY.exe and use the following settings to connect to your VPS. You should of course insert the information you recieved from the web host.
+
+Host Name (or IP address):	root@178.182.442.192
+Port:				22
+Connection type:		SSH
+
+Click on "Open" to connect to your VPS.
+You will be asked to enter your password. After entering it and pressing ENTER you are logged in. 
+That's it. You have now *full* control of your first VPS. But as useful this may occur at the beginning there is also a downside. Everybody with the password can connect via ssh to your VPS and you change everything he wants. Let's change this.
+
+
+## 2 Updating Ubuntu on VPS
 We should make sure that our software is up to date. Updating is important to make sure that you don't miss security updates which gives an potential attacker better chances to highjack your VPS. Let's run the update.
 ```
 sudo apt update
@@ -38,9 +52,7 @@ sudo dpkg-reconfigure tzdata
 ```
 The menu is self-explanatory. 
 
-
-
-## 2. Generate a new User
+## 3. Generate a new User
 Everybody who knows the password can log into your VPS and has immediatelly *full* rights. 
 That is because the user 'root' is the superuser. Think of it as the admin of this computer. It is good practice to add a new user.
 **Don't just copy this command!** Change the field 'yournewuser' to something of your choice. It is just a name.
@@ -63,14 +75,16 @@ sudo su
 whoami
 ```
 The output should be 'root' which means we have succesfully generated a new user and added him to the group of sudoers.
-Now you can open a new terminal and connect to your new user via ssh.
+Now you can open a new terminal and connect to your new user via ssh. For windows please see at storypoint 1b.
 ```
 ssh yournewuser@IP-address
 ```
 You see why we need a strong password? At the moment everybody with the password of the yournewuser can login to your VPS. Let's work an that.
 
-## 3a. Generating a RSA key pair -- MAC OS
+## 4. Generating a RSA key pair
 Our goal in this chapter is to activate the ssh login with a private key. After that we will turn off the password login.
+
+### 4a.  MAC OS
 Let's open a new terminal on your **local** machine. 
 Navigate to your .ssh folder and run generate the RSA keys. 
 ```
@@ -98,19 +112,19 @@ ssh -i ~/.ssh/id_rsa_coda yournewuser@IP-address
 ```
 Enter your password which you used for encrypting your RSA key. (Not your user password.) Voila! 
 
-## 3b. Generating a RSA key pair -- using PuTTY on Windows 
+### 4b. on Windows using PuTTY
 lets open puttygen.exe on your local machine to generate you RSA key pair.
-the paramters should be set as following
- 
- Type of key to generate= RSA
- number of bits in a generated key= 2048
- 
+the paramters should be set as following:
+
+- Type of key to generate= RSA
+- number of bits in a generated key= 2048
+
 Click on generate. While generation you have to move your mouse over the application window for some random computations.
-Once it´s done you can set a Key comment only for a better overview if you have several on your computer.
+Once it´s done you can set a Key comment, that helps you to organize your Keys, if you have some more.
 Next step is to choose a password (Key passphrase) to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
 
 Now you can save your private key on your local machine. Later you choose that file for authentication in PuTTY.exe
-The public key string you have to copy to your VPS.
+The public key you have to copy to your VPS. Copy the hole string in the text area on the top of puttygen.exe to clipboard.
 
 On your VPS you go to directory \home\\<yournewuser>\\.ssh
 If this directory doesn´t exists, just create it.
@@ -120,10 +134,16 @@ sudo nano authorized_keys
 ```
 Paste in your public key string and save that file.
 
+Now you shoulb be able to login via PuTTY with your private-key. Let´s check this!
+Open another putty.exe on your local machine. Go to "Connection-->SSH-->Auth on the Category-tree on the right side.
+There you have to choose your stored private key file at the "Authentication parameters".
+Go back to the Session settings. 
 
+Host Name (or IP address):	<yournewuser>@178.182.442.192
+Port:				22
+Connection type:		SSH
 
-Login via PuTTY with your private-key
-
+It´s recommended to save this settings by type in a descriptive name at "Saved Sessions" and click on "Save".
 
 
 ### Organizing RSA keys
