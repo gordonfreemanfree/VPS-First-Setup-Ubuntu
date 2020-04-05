@@ -27,7 +27,7 @@ That's it. You have now *full* control of your first VPS. But as useful this may
 
 ### 1b. Connecting from Windows
 For this tutorial we use the free SSH and telnet client - software PuTTY. You can download it on https://www.putty.org/.
-Open puTTY.exe and use the following settings to connect to your VPS. You should of course insert the information you recieved from the web host.
+Open puTTY.exe and use the following settings to connect to your VPS. Of course you should insert the information you recieved from the web host.
 
 Host Name (or IP address):	root@178.182.442.192
 Port:				22
@@ -75,7 +75,7 @@ sudo su
 whoami
 ```
 The output should be 'root' which means we have succesfully generated a new user and added him to the group of sudoers.
-Now you can open a new terminal and connect to your new user via ssh. For windows please see at storypoint 1b.
+Now you can open a new terminal and connect to your new user via ssh. **For windows please see at storypoint 1b.**
 ```
 ssh yournewuser@IP-address
 ```
@@ -112,6 +112,30 @@ ssh -i ~/.ssh/id_rsa_coda yournewuser@IP-address
 ```
 Enter your password which you used for encrypting your RSA key. (Not your user password.) Voila! 
 
+### Organizing RSA keys - MAC OS
+For every VPS you are using you will have a different RSA keys (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
+```
+cd /Users/your_user_name_on_local_machine/.ssh/config
+```
+If this file does not exist we simply create the file in the /.ssh/ folder
+```
+nano config
+```
+Nano is like word, just a texteditor. We are going to add the following now to the file: make sure you replace IP-address, yournewuser, and id_rsa_xxx with your names.
+```
+Host vps_coda
+  Hostname IP-address 
+  user yournewuser
+  IdentityFile ~/.ssh/id_rsa_xxx
+```
+You can exit Nano and save the file. Press ctrl + x and confirm to save the file. Done!
+Now back to the terminal on your local machine.
+```
+ssh vps_coda
+```
+Enter the encryption password for your RSA key and you are in your VPS.
+
+
 ### 4b. on Windows using PuTTY
 lets open puttygen.exe on your local machine to generate you RSA key pair.
 the paramters should be set as following:
@@ -134,7 +158,7 @@ sudo nano authorized_keys
 ```
 Paste in your public key string and save that file.
 
-Now you shoulb be able to login via PuTTY with your private-key. Let´s check this!
+Now you should be able to login via PuTTY with your private-key. Let´s check this!
 Open another putty.exe on your local machine. Go to "Connection-->SSH-->Auth on the Category-tree on the right side.
 There you have to choose your stored private key file at the "Authentication parameters".
 Go back to the Session settings. 
@@ -143,31 +167,14 @@ Host Name (or IP address):	<yournewuser>@178.182.442.192
 Port:				22
 Connection type:		SSH
 
-It´s recommended to save this settings by type in a descriptive name at "Saved Sessions" and click on "Save".
+Click on "Open".
+Now you are asked for your Key passphrase. The password you set while generating your RSA key pair. (Not your user password.) Voila!
 
+### Organizing RSA keys - in PuTTY
+It´s recommended to save your putty - settings by type in a descriptive name at "Saved Sessions" and click on "Save".
+So later on you can open a connection by double-clicking the "Saved Sessions" settings.
+Now you can open your Connection 
 
-### Organizing RSA keys
-For every VPS you are using you will have a different RSA keys (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
-```
-cd /Users/your_user_name_on_local_machine/.ssh/config
-```
-If this file does not exist we simply create the file in the /.ssh/ folder
-```
-nano config
-```
-Nano is like word, just a texteditor. We are going to add the following now to the file: make sure you replace IP-address, yournewuser, and id_rsa_xxx with your names.
-```
-Host vps_coda
-  Hostname IP-address 
-  user yournewuser
-  IdentityFile ~/.ssh/id_rsa_xxx
-```
-You can exit Nano and save the file. Press ctrl + x and confirm to save the file. Done!
-Now back to the terminal on your local machine.
-```
-ssh vps_coda
-```
-Enter the encryption password for your RSA key and you are in your VPS.
 
 ## 4. Disable Password login
 **Warning:** only follow this chapter once you have logged in successfully with your RSA key. If you disable the password login and cannot connect with the private key then you locked yourself out. 
