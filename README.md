@@ -5,12 +5,14 @@ At the moment this tutorial is only for Mac OS users. Tested with Ubuntu 18.04.
 
 First we want to check that our VPS host provides a console login without ssh. This is important because if we lock ouself out we lose the access to our VPS. **Warning**. Take this serious. You don't want to lock yourself out. If you mess up this configuration you no longer can access via ssh. No guarantee for this!
 
-## 1. Connecting to the VPS and updating
-When you recieve your loggin data from the web host you usually get three important informations:
+## 1. Connecting to the VPS 
+When you recieve your loggin data from the web host you usually get three important information:
+
 * your IP address
 * your username (which is in general <root>)
 * your password for <root>
 
+### 1a. Connecting from MAC OS
 Open your terminal and use the following command to connect to your VPS. You should of course insert the information you recieved from the web host.
 ```
 ssh <username>@<IP-address>
@@ -26,7 +28,20 @@ ssh root@178.182.442.192
 You will be asked to enter your password. After entering it and pressing ENTER you are logged in. 
 That's it. You have now *full* control of your first VPS. But as useful this may occur at the beginning there is also a downside. Everybody with the password can connect via ssh to your VPS and change everything he wants. Let's change this.
 
-### Updating Ubuntu
+### 1b. Connecting from Windows
+For this tutorial we use the free SSH and telnet client - software PuTTY. You can download it on https://www.putty.org/.
+Open puTTY.exe and use the following settings to connect to your VPS. Of course you should insert the information you recieved from the web host.
+
+Host Name (or IP address):	root@178.182.442.192
+Port:				22
+Connection type:		SSH
+
+Click on "Open" to connect to your VPS.
+You will be asked to enter your password. After entering it and pressing ENTER you are logged in. 
+That's it. You have now *full* control of your first VPS. But as useful this may occur at the beginning there is also a downside. Everybody with the password can connect via ssh to your VPS and you change everything he wants. Let's change this.
+
+
+## 2 Updating Ubuntu on VPS
 We should make sure that our software is up to date. Updating is important to make sure that you don't miss security updates which gives an potential attacker better chances to highjack your VPS. Let's run the update.
 ```
 sudo apt update
@@ -40,9 +55,7 @@ sudo dpkg-reconfigure tzdata
 ```
 The menu is self-explanatory. 
 
-
-
-## 2. Generate a new User
+## 3. Generate a new User
 Everybody who knows the password can log into your VPS and has immediatelly *full* rights. 
 That is because the user <root> is the superuser. Think of it as the admin of this computer. It is good practice to add a new user.
 **Don't just copy this command!** Change the field <yournewuser> to something of your choice. It is just a name. But better don't use your clear name. Bots are using common names from the country to try to login into your VPS. So be creative!
@@ -65,14 +78,16 @@ sudo su
 whoami
 ```
 The output should be 'root' which means we have succesfully generated a new user and added him to the group of sudoers.
-Now you can open a new terminal and connect to your new user via ssh.
+Now you can open a new terminal and connect to your new user via ssh. **For windows please see at storypoint 1b.**
 ```
 ssh <yournewuser>@<IP-address>
 ```
 You see why we need a strong password? At the moment everybody with the password of the <yournewuser> can login to your VPS. Let's work an that.
 
-## 3. Generating a RSA key pair 
+## 4. Generating a RSA key pair
 Our goal in this chapter is to activate the ssh login with a private key. After that we will turn off the password login.
+
+### 4a.  MAC OS
 Let's open a new terminal on your **local** machine. 
 Navigate to your /.ssh folder and generate the RSA keys. 
 ```
@@ -101,8 +116,9 @@ ssh -i ~/.ssh/id_rsa_coda <yournewuser>@<IP-address>
 ```
 Enter your password which you used for encrypting your RSA key. (Not your user password.) Voila! 
 
-### Organizing RSA keys
-For every VPS you are using you will have a different RSA key (hopefully, it is recommended). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
+### Organizing RSA keys - MAC OS
+For every VPS you are using you will have a different RSA keys (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
+
 ```
 cd /Users/your_user_name_on_local_machine/.ssh/config
 ```
@@ -124,8 +140,50 @@ ssh vps_coda
 ```
 Enter the encryption password for your RSA key and you are in your VPS.
 
-## 4. Disable Password login
+
+### 4b. on Windows using PuTTY
+lets open puttygen.exe on your local machine to generate you RSA key pair.
+the paramters should be set as following:
+
+- Type of key to generate= RSA
+- number of bits in a generated key= 2048
+
+Click on generate. While generation you have to move your mouse over the application window for some random computations.
+Once it´s done you can set a Key comment, that helps you to organize your Keys, if you have some more.
+Next step is to choose a password (Key passphrase) to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
+
+Now you can save your private key on your local machine. Later you choose that file for authentication in PuTTY.exe
+The public key you have to copy to your VPS. Copy the hole string in the text area on the top of puttygen.exe to clipboard.
+
+On your VPS you go to directory \home\\<yournewuser>\\.ssh
+If this directory doesn´t exists, just create it.
+
+```
+sudo nano authorized_keys
+```
+Paste in your public key string and save that file.
+
+Now you should be able to login via PuTTY with your private-key. Let´s check this!
+Open another putty.exe on your local machine. Go to "Connection-->SSH-->Auth on the Category-tree on the right side.
+There you have to choose your stored private key file at the "Authentication parameters".
+Go back to the Session settings. 
+
+Host Name (or IP address):	<yournewuser>@178.182.442.192
+Port:				22
+Connection type:		SSH
+
+Click on "Open".
+Now you are asked for your Key passphrase. The password you set while generating your RSA key pair. (Not your user password.) Voila!
+
+### Organizing RSA keys - in PuTTY
+It´s recommended to save your putty - settings by type in a descriptive name at "Saved Sessions" and click on "Save".
+So later on you can open a connection by double-clicking the "Saved Sessions" settings.
+Now you can open your Connection 
+
+
+## 5. Disable Password login
 **Warning:** only follow this chapter once you have logged in successfully with your RSA key. If you disable the password login and cannot connect with the private key then you locked yourself out. Also make sure that you have a console from your VPS provider just in case you lock yourself out.
+
 
 Since you are logged in your VPS with <yournewuser> we first want to have root previliges.
 ```
@@ -162,9 +220,10 @@ systemctl restart sshd
 ```
 But it is recommended to only allow the login with RSA keys. 
 
-## 5. Disable root login
-Every malicious actor knows that there is a user root. So let's lock the root access. You might ask yourself why we do this since the root user has no ssh key and therefore nobody can connect to it. True. Anyway I recommend doing it because of good practice. You never know. You might turn on the password login again and suddenly your user 'root' can be brute forced.
+## 6. Disable root login
+Every malicious actor knows that there is a user root. So let's lock the root access. You might ask yourself why we do this since the root user has no ssh key and therefore nobody can connect to it. True. Anyway i recommend doing it because of good practice. You never know. You might turn on the password login again and suddenly your user 'root' can be brute forced.
 Use sudo of course ('sudo su' is the trick):
+
 ```
 sed -i 's/^PermitRootLogin.*/PermitRootLogin no/g' /etc/ssh/sshd_config
 systemctl restart sshd
@@ -179,7 +238,7 @@ sed -i 's/^PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
 ```
 
-## 6. Setting up a firewall and changing ssh port
+## 7. Setting up a firewall and changing ssh port
 Your standard ssh port is port 22. So every bot out there is knocking on the port 22. If we change this default port we can protect ourselfs from those bots. Of course they can use a port scanner. But you know, security is nothing binary. Just make it harder for someone to crack the system.
 
 
@@ -272,7 +331,7 @@ ssh vps_coda
 ```
 Done!? Almost.
 
-## Update firewall to be ready for coda
+## 8. Update firewall to be ready for coda
 As you will see while installing the coda node you will need to open port 8302 and 8303 on your VPS to be able to run the node. It's simple:
 ```
 sudo ufw allow 8302/tcp
