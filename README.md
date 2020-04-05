@@ -176,7 +176,7 @@ So later on you can open a connection by double-clicking the "Saved Sessions" se
 Now you can open your Connection 
 
 
-## 4. Disable Password login
+## 5. Disable Password login
 **Warning:** only follow this chapter once you have logged in successfully with your RSA key. If you disable the password login and cannot connect with the private key then you locked yourself out. 
 
 Since you are logged in your VPS with yournewuser we first want to have root previliges.
@@ -215,7 +215,7 @@ systemctl restart sshd
 ```
 But it is recommended to only allow the login with RSA keys. 
 
-## 5. Disable root login
+## 6. Disable root login
 Every malicious actor knows that there is a user root. So let's lock the root access. You might ask yourself why we do this since the root user has no ssh key and therefore nobody can connect to it. True. Anyway i recommend doing it because of good practice. You never know. You might turn on the password login again and suddenly your user 'root' can be brute forced.
 Use sudo of course:
 ```
@@ -230,7 +230,7 @@ sed -i 's/^PermitRootLogin.*/PermitRootLogin yes/g' /etc/ssh/sshd_config
 systemctl restart sshd
 ```
 
-## 6. Setting up a firewall and changing ssh port
+## 7. Setting up a firewall and changing ssh port
 Your standard ssh port is port 22. So every bot out there is knocking on the port 22. If we change this default port we can protect ourselfs from those bots. Of course they can use a port scanner. But you know, security is nothing binary. Just make it harder for someone to crack the system.
 
 
@@ -323,7 +323,7 @@ ssh vps_coda
 ```
 Done!? Almost.
 
-## Update firewall to be ready for coda
+## 8. Update firewall to be ready for coda
 As you will see while installing the coda node you will need to open port 8302 and 8303 on your VPS to be able to run the node. It's simple:
 ```
 sudo ufw allow 8302/tcp
