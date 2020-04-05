@@ -1,9 +1,10 @@
-# VPS - Setting up your Ubuntu
-This Tutorial shows you how to secure your VPS. It is crucial to follow the best practices because you don't want to have an malicious actor in your account. 
+# Setting up your first Ubuntu VPS
+This Tutorial shows you how to secure your VPS (Virtual Private Server). It is crucial to follow the best practices because you don't want to have a malicious actor in your account. 
 
-At the moment this tutorial is only for Mac OS users. Tested with Ubuntu 18.04.
+Tested with Ubuntu 18.04.
 
-First we want to check that our VPS host provides a console login without ssh. This is important because if we lock ouself out we lose the access to our VPS. **Warning**. Take this serious. You don't want to lock yourself out. If you mess up this configuration you no longer can access via ssh. No guarantee for this!
+First we want to check that our VPS host provides a console login without ssh. This is important because if we lock ouself out we lose the access to our VPS. **Warning**. Take this serious. You don't want to lock yourself out. If you mess up this configuration you can no longer access via ssh. No guarantee for this! And no guarantee for the tutorial. But it's not rocket science. 
+I tested it on two different devices without conflicts.
 
 ## 1. Connecting to the VPS 
 When you recieve your loggin data from the web host you usually get three important information:
@@ -63,7 +64,7 @@ That is because the user <root> is the superuser. Think of it as the admin of th
 adduser <yournewuser>
 
 ```
-It will be prompted to first enter the password of the current user and then to choose a password for <yournewuser>. Please choose a **strong password** and safe it in your password manager. Make sure your don't loose it. There is no need to fill in the information like name, room ....just leave it blank. 
+It will be prompted to first enter the password of the current user and then to choose a password for <yournewuser>. Please choose a **strong password** and safe it in your password manager.(If you don't have one - go get it. You need it in crypto. But after this tutorial.) Make sure you don't loose it. There is no need to fill in the information like name, room ....just leave it blank. 
 
 ### make him a sudoer
 Now we have a new user. We want to add the <yournewuser> to the sudo list because the new user has limited rights.
@@ -78,14 +79,14 @@ sudo su
 whoami
 ```
 The output should be 'root' which means we have succesfully generated a new user and added him to the group of sudoers.
-Now you can open a new terminal and connect to your new user via ssh. **For windows please see at storypoint 1b.**
+Now you can open a new terminal and connect to your new user via ssh. **For windows please look at storypoint 1b.**
 ```
 ssh <yournewuser>@<IP-address>
 ```
 You see why we need a strong password? At the moment everybody with the password of the <yournewuser> can login to your VPS. Let's work an that.
 
 ## 4. Generating a RSA key pair
-Our goal in this chapter is to activate the ssh login with a private key. After that we will turn off the password login.
+Our goal in this chapter is to activate the ssh login with a private key. After that we will turn off the password login. 
 
 ### 4a.  MAC OS
 Let's open a new terminal on your **local** machine. 
@@ -94,7 +95,7 @@ Navigate to your /.ssh folder and generate the RSA keys.
 cd ~/.ssh/
 ssh-keygen -t rsa
 ```
-You will be asked to name the file. The convention is: *id_rsa_xxx* . Where 'xxx' is something you can choose.
+You will be asked to name the file. The convention is: *id_rsa_xxx* . Where 'xxx' is something you can choose. It might be *id_rsa_coda*.
 Next step is to choose a password to encrypt the private key. Choose a strong password and save the password in your password manager. Remember, if you lose your password you lose the access to your VPS.
 
 You have successfully generated two files on your local machine.
@@ -117,7 +118,7 @@ ssh -i ~/.ssh/id_rsa_coda <yournewuser>@<IP-address>
 Enter your password which you used for encrypting your RSA key. (Not your user password.) Voila! 
 
 ### Organizing RSA keys - MAC OS
-For every VPS you are using you will have a different RSA keys (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
+For every VPS you are using you will have a different RSA key (hopefully). Maybe you also use one for your git account. Therefore it is recommended to organize your keys from the beginning on. Believe me, it saves you a lot of time. So go to your ~/.ssh/ folder and look for the file named *config*. It's usually located here:
 
 ```
 cd /Users/your_user_name_on_local_machine/.ssh/config
@@ -126,7 +127,7 @@ If this file does not exist we simply create the file in the /.ssh/ folder
 ```
 nano config
 ```
-Nano is like word, just a texteditor. We are going to add the following now to the file: make sure you replace Host, IP-address, yournewuser, and id_rsa_xxx with your names.
+Nano is like word, just a texteditor. We are going to add the following to the file: make sure you replace Host, IP-address, yournewuser, and id_rsa_xxx with your names.
 ```
 Host <vps_coda>
   Hostname <IP-address> 
@@ -142,7 +143,7 @@ Enter the encryption password for your RSA key and you are in your VPS.
 
 
 ### 4b. on Windows using PuTTY
-lets open puttygen.exe on your local machine to generate you RSA key pair.
+lets open puttygen.exe on your local machine to generate your RSA key pair.
 the paramters should be set as following:
 
 - Type of key to generate= RSA
@@ -155,7 +156,7 @@ Next step is to choose a password (Key passphrase) to encrypt the private key. C
 Now you can save your private key on your local machine. Later you choose that file for authentication in PuTTY.exe
 The public key you have to copy to your VPS. Copy the hole string in the text area on the top of puttygen.exe to clipboard.
 
-On your VPS you go to directory \home\\<yournewuser>\\.ssh
+On your VPS you go to directory /home/<yournewuser>/.ssh
 If this directory doesn´t exists, just create it.
 
 ```
@@ -173,12 +174,12 @@ Port:				22
 Connection type:		SSH
 
 Click on "Open".
-Now you are asked for your Key passphrase. The password you set while generating your RSA key pair. (Not your user password.) Voila!
+Now you are asked for your Key passphrase. The password you set while generating your RSA key pair. (Not your user password.) Voila! 
 
 ### Organizing RSA keys - in PuTTY
 It´s recommended to save your putty - settings by type in a descriptive name at "Saved Sessions" and click on "Save".
 So later on you can open a connection by double-clicking the "Saved Sessions" settings.
-Now you can open your Connection 
+Now you can open your Connection.
 
 
 ## 5. Disable Password login
@@ -193,7 +194,7 @@ Enter user password.
 ```
 grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config || echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 ```
-This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'no'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication no'
+This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'no'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication no'.
 ```
 systemctl restart sshd
 ```
