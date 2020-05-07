@@ -342,6 +342,13 @@ What next? Your VPS is ready to run some snarky software.
 Go to:
 https://codaprotocol.com/docs/getting-started
 
+## Epilog
+Run this command to see the failed login attempts on your VPS. Funny, right? What you see here are the bots which are trying to get in. But after this tutorial you shouldn't worry too much about them.
+```
+grep "Failed password" /var/log/auth.log
+```
+
+
 
 
 
