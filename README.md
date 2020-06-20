@@ -59,7 +59,7 @@ The menu is self-explanatory.
 ## 3. Generate a new User
 Everybody who knows the password can log into your VPS and has immediatelly *full* rights. 
 That is because the user <root> is the superuser. Think of it as the admin of this computer. It is good practice to add a new user.
-**Don't just copy this command!** Change the field <yournewuser> to something of your choice. It is just a name. But better don't use your clear name. Bots are using common names from the country to try to login into your VPS. So be creative!
+**Don't just copy this command!** Change the field <yournewuser> to something of your choice. It is just a name. But better don't use your clear name. Bots are using common names from the country to try to login into your VPS. So be creative! And use lower case letters. (The name should match the regular expression defined in the /etc/adduser.conf and is usually NAME_REGEX="^[a-z][-a-z0-9_]*\$" . If you don't understand this - just use lowercase.)
 ```
 adduser <yournewuser>
 
