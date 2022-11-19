@@ -353,9 +353,9 @@ grep "Failed password" /var/log/auth.log
 Newer Ubuntu versions do not allow RSA by default and elliptic curves are simply the better public / private key encryption schemes. So let's change to ed25519.
 
 First of all we allow the password login again on our VPS.
-
-grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config || echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
 ```
-This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'no'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication no'.
+grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config || echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
+```
+This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'yes'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication yes'.
 
 
