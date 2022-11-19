@@ -11,7 +11,9 @@ When you recieve your loggin data from the web host you usually get three import
 
 * your IP address
 * your username (which is in general <root>)
-* your password for <root>
+* your 
+
+for <root>
 
 ### 1a. Connecting from MAC OS
 Open your terminal and use the following command to connect to your VPS. You should of course insert the information you recieved from the web host.
@@ -347,8 +349,13 @@ Run this command to see the failed login attempts on your VPS. Funny, right? Wha
 ```
 grep "Failed password" /var/log/auth.log
 ```
+## Update the keys from RSA to Ed25519
+Newer Ubuntu versions do not allow RSA by default and elliptic curves are simply the better public / private key encryption schemes. So let's change to ed25519.
 
+First of all we allow the password login again on our VPS.
 
-
+grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAuthentication.*/PasswordAuthentication no/g' /etc/ssh/sshd_config || echo "PasswordAuthentication no" >> /etc/ssh/sshd_config
+```
+This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'no'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication no'.
 
 
