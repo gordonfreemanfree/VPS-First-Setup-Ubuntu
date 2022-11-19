@@ -352,7 +352,7 @@ grep "Failed password" /var/log/auth.log
 ## Update the keys from RSA to Ed25519
 Newer Ubuntu versions do not allow RSA by default and elliptic curves are simply the better public / private key encryption schemes. So let's change to ed25519.
 
-First of all we allow the password login again on our VPS.
+First of all we allow the password login again on our VPS in order to be able to copy the new key to the VPS.
 ```
 grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAuthentication.*/PasswordAuthentication yes/g' /etc/ssh/sshd_config || echo "PasswordAuthentication yes" >> /etc/ssh/sshd_config
 ```
@@ -372,8 +372,17 @@ Next we generate the new public/private keys. Go to your /.ssh folder and genera
   ```
   ssh-keygen -t ed25519
   ```
-Next we upload the public key to the VPS:
+Next we upload the public key to the VPS. That is the reason why we allowed the password login again.
   ```
   ssh-copy-id -i <ed25519_key.pub> -p <PORT> <username>@IP-Address
   ```
+  Now check if you can login with your new keys.
   
+  Now check if you can login with your new keys.
+  ```
+  ssh -i ~/.ssh/id_ed25519_xxx <yournewuser>@IP-address -p <PORT>
+  ```
+  If everything works we now delete the old RSA key from the ~/.ssh/authorized_keys file. 
+After that check again, that you can login with your new ED25519 key. Finally switch of password login again in the sshd_config file. 
+Restart the sshd daemon and try to login with password. That should fail now. Try to connect with the RSA key - that should fail as well. 
+That's it. We updated our keys.
