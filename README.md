@@ -358,4 +358,22 @@ grep -q "^PasswordAuthentication" /etc/ssh/sshd_config && sed -i 's/^PasswordAut
 ```
 This command changes the sshd_config file in the ssh folder and sets the PasswordAuthentication to 'yes'. You can also do this manually with the help of nano. Just navigate to the directory, open the file sshd_config and set 'PasswordAuthentication yes'.
 
-
+Now we need to restart our sshd daemon
+```
+  sudo systemctl restart ssh
+```
+If there is some error you could also just restart the VPS with 
+  ```
+  sudo reboot
+  ```
+Make sure that you can login with your password only!
+  
+Next we generate the new public/private keys. Go to your /.ssh folder and generate the keys. 
+  ```
+  ssh-keygen -t ed25519
+  ```
+Next we upload the public key to the VPS:
+  ```
+  ssh-copy-id -i <ed25519_key.pub> -p <PORT> <username>@IP-Address
+  ```
+  
